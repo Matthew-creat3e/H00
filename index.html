@@ -390,7 +390,7 @@ section, footer, header.hoo-nav { position: relative; z-index: 1 }
 .pf-frame .pf-bar i:nth-child(2){background:rgba(232,183,117,.5)}
 .pf-frame .pf-bar i:nth-child(3){background:rgba(91,168,118,.5)}
 .pf-frame .pf-bar .pf-url{margin-left:14px;font-family:var(--sans);font-size:11px;color:var(--mute-2);letter-spacing:.04em}
-.pf-frame iframe{width:100%;height:calc(100% - 32px);border:0;background:#0a0a0a;pointer-events:none;transform-origin:top left}
+.pf-frame iframe,.pf-frame .pf-shot{width:100%;height:calc(100% - 32px);border:0;background:#0a0a0a;display:block;object-fit:cover;object-position:top}
 .pf-frame .pf-meta{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;background:linear-gradient(180deg, transparent, rgba(0,0,0,.92) 60%);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;opacity:0;transition:opacity .4s}
 .pf-frame.is-front .pf-meta{opacity:1}
 .pf-meta .pf-chip{font-family:var(--display);font-size:12px;letter-spacing:.22em;color:var(--accent);border:1px solid var(--accent);padding:5px 10px;border-radius:99px;background:rgba(0,0,0,.5)}
@@ -1209,21 +1209,21 @@ async function typeLoop(){
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 typeLoop();
 
-/* portfolio carousel */
+/* portfolio carousel — static screenshots, click opens full demo in new tab */
 const DEMOS = [
-  {file:'v7-painting-demo-LOCKED.html',industry:'Painting',name:'True Coat KC',hook:'Editorial brand for a one-truck operator.'},
-  {file:'v7-cleaning-demo-LOCKED.html',industry:'Cleaning',name:'Pristine Clean KC',hook:'6-step booking with live price in the hero.'},
-  {file:'v7-roofing-demo-LOCKED.html',industry:'Roofing',name:'Summit Roofing KC',hook:'Storm damage funnel with free inspection capture.'},
-  {file:'v7-fencing-demo-LOCKED.html',industry:'Fencing',name:'Ironline Fencing',hook:'Mapbox draw-your-fence with instant ballpark.'},
-  {file:'v7-pressure-washing-demo-LOCKED.html',industry:'Pressure Washing',name:'BlastClean KC',hook:'4-step quote on satellite imagery.'},
-  {file:'v7-pet-grooming-demo-LOCKED.html',industry:'Pet Grooming',name:'Paws & Suds',hook:'B/A slider hero + sticky mascot CTA.'},
-  {file:'v7-personal-training-demo-LOCKED.html',industry:'Personal Training',name:'IRONCLAD Fitness',hook:'Hope-themed PT brand with full conversion path.'},
-  {file:'v7-lawn-care-demo-LOCKED.html',industry:'Lawn Care',name:'Greenfield Lawn',hook:'Property-size selector matches package instantly.'},
-  {file:'v7-auto-detailing-demo-LOCKED.html',industry:'Auto Detailing',name:'Mirror Finish',hook:'Premium gallery + ceramic upsell at checkout.'},
-  {file:'v7-moving-demo-LOCKED.html',industry:'Moving',name:'Long Light Moving',hook:'Inventory builder produces instant ballpark.'},
-  {file:'v7-food-truck-demo-LOCKED.html',industry:'Food Truck',name:'Fuego Mobile',hook:'Live location + today\'s menu + book the truck.'},
-  {file:'v7-photography-demo-LOCKED.html',industry:'Photography',name:'North Star Photo',hook:'Editorial portfolio + session booking with deposits.'},
-  {file:'v7-risen-clothing-demo-LOCKED.html',industry:'Streetwear',name:'RISEN Clothing',hook:'Drop calendar + 3-tier loyalty + carousels.'}
+  {file:'v7-painting-demo-LOCKED.html',          slug:'painting',          industry:'Painting',          name:'True Coat KC',         hook:'Editorial brand for a one-truck operator.'},
+  {file:'v7-cleaning-demo-LOCKED.html',          slug:'cleaning',          industry:'Cleaning',          name:'Pristine Clean KC',    hook:'6-step booking with live price in the hero.'},
+  {file:'v7-roofing-demo-LOCKED.html',           slug:'roofing',           industry:'Roofing',           name:'Summit Roofing KC',    hook:'Storm damage funnel with free inspection capture.'},
+  {file:'v7-fencing-demo-LOCKED.html',           slug:'fencing',           industry:'Fencing',           name:'Ironline Fencing',     hook:'Mapbox draw-your-fence with instant ballpark.'},
+  {file:'v7-pressure-washing-demo-LOCKED.html',  slug:'pressure-washing',  industry:'Pressure Washing',  name:'BlastClean KC',        hook:'4-step quote on satellite imagery.'},
+  {file:'v7-pet-grooming-demo-LOCKED.html',      slug:'pet-grooming',      industry:'Pet Grooming',      name:'Paws & Suds',          hook:'B/A slider hero + sticky mascot CTA.'},
+  {file:'v7-personal-training-demo-LOCKED.html', slug:'personal-training', industry:'Personal Training', name:'IRONCLAD Fitness',     hook:'Hope-themed PT brand with full conversion path.'},
+  {file:'v7-lawn-care-demo-LOCKED.html',         slug:'lawn-care',         industry:'Lawn Care',         name:'Greenfield Lawn',      hook:'Property-size selector matches package instantly.'},
+  {file:'v7-auto-detailing-demo-LOCKED.html',    slug:'auto-detailing',    industry:'Auto Detailing',    name:'Mirror Finish',        hook:'Premium gallery + ceramic upsell at checkout.'},
+  {file:'v7-moving-demo-LOCKED.html',            slug:'moving',            industry:'Moving',            name:'Long Light Moving',    hook:'Inventory builder produces instant ballpark.'},
+  {file:'v7-food-truck-demo-LOCKED.html',        slug:'food-truck',        industry:'Food Truck',        name:'Fuego Mobile',         hook:'Live location + today\'s menu + book the truck.'},
+  {file:'v7-photography-demo-LOCKED.html',       slug:'photography',       industry:'Photography',       name:'North Star Photo',     hook:'Editorial portfolio + session booking with deposits.'},
+  {file:'v7-risen-clothing-demo-LOCKED.html',    slug:'streetwear',        industry:'Streetwear',        name:'RISEN Clothing',       hook:'Drop calendar + 3-tier loyalty + carousels.'}
 ];
 const stage = document.getElementById('pfStage');
 DEMOS.forEach((d,i) => {
@@ -1231,10 +1231,10 @@ DEMOS.forEach((d,i) => {
   f.className = 'pf-frame'; f.dataset.idx = i;
   f.innerHTML = `
     <div class="pf-bar"><i></i><i></i><i></i><span class="pf-url">${d.industry.toLowerCase().replace(/\s/g,'-')}.com</span></div>
-    <iframe loading="lazy" data-src="${d.file}"></iframe>
+    <img class="pf-shot" loading="lazy" src="demo-screenshots/${d.slug}.jpg" alt="${d.name} — ${d.industry}">
     <div class="pf-meta">
       <div><div class="pf-chip">${d.industry}</div><div class="pf-name">${d.name}</div><div class="pf-hook">${d.hook}</div></div>
-      <button class="pf-open" data-idx="${i}">VIEW LIVE →</button>
+      <button class="pf-open" data-idx="${i}">OPEN LIVE ↗</button>
     </div>`;
   stage.appendChild(f);
 });
@@ -1247,10 +1247,6 @@ function render(){
     const s = slot((i-cur+total)%total);
     f.dataset.slot = s;
     f.classList.toggle('is-front', s === 'front');
-    if (['front','left','right','back-l','back-r'].includes(s)){
-      const ifr = f.querySelector('iframe');
-      if (!ifr.src && ifr.dataset.src) ifr.src = ifr.dataset.src;
-    }
   });
   document.getElementById('pfNum').textContent = String(cur+1).padStart(2,'0');
   document.getElementById('pfTotal').textContent = String(total).padStart(2,'0');
@@ -1279,8 +1275,13 @@ stage.addEventListener('mouseleave', () => { if (!paused) start(); });
 stage.addEventListener('click', e => {
   const f = e.target.closest('.pf-frame');
   if (!f) return;
-  if (f.dataset.slot === 'front') openLightbox(parseInt(f.dataset.idx,10));
-  else { go(parseInt(f.dataset.idx,10)); restart(); }
+  if (f.dataset.slot === 'front'){
+    // Front frame click → open the full live demo in a new tab
+    // (works perfectly on mobile — full screen, no iframe scaling issues)
+    window.open(DEMOS_BASE + DEMOS[parseInt(f.dataset.idx,10)].file, '_blank');
+  } else {
+    go(parseInt(f.dataset.idx,10)); restart();
+  }
 });
 render(); start();
 
