@@ -1301,9 +1301,7 @@ document.querySelectorAll('.hoo-pop:not(.hoo-anim)').forEach(el => io.observe(el
 
 <script>(function(){
   function send(){try{parent.postMessage({type:'hoo-frontpage-height',height:document.documentElement.scrollHeight},'*');}catch(e){}}
-  addEventListener('load',send);addEventListener('resize',send);
-  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
-  setTimeout(send,500);setTimeout(send,1500);setTimeout(send,3000);
+  addEventListener('load',function(){setTimeout(send,3000);});
 })();</script>
 </body>
 </html>
