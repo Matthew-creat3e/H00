@@ -1210,6 +1210,7 @@ function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 typeLoop();
 
 /* portfolio carousel — static screenshots, click opens full demo in new tab */
+const DEMOS_BASE = "./"; // relative — V7 demos live in the same folder as this page
 const DEMOS = [
   {file:'v7-painting-demo-LOCKED.html',          slug:'painting',          industry:'Painting',          name:'True Coat KC',         hook:'Editorial brand for a one-truck operator.'},
   {file:'v7-cleaning-demo-LOCKED.html',          slug:'cleaning',          industry:'Cleaning',          name:'Pristine Clean KC',    hook:'6-step booking with live price in the hero.'},
