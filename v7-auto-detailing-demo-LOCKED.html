@@ -822,7 +822,8 @@ section{will-change:transform}
 
 /* Mobile */
 @media(max-width:980px){
-  .hero-body{grid-template-columns:1fr;gap:28px;padding:8px 28px 40px;align-items:start}
+  .hero-body{grid-template-columns:minmax(0,1fr);gap:28px;padding:8px 28px 40px;align-items:start}
+  .hero-copy,.cfg{min-width:0;max-width:100%}
   .cfg{padding:26px 22px 22px}
   .hero-mascot{width:100px;bottom:18px;left:14px}
   .hero-mascot-bubble{display:none}
@@ -831,8 +832,8 @@ section{will-change:transform}
   .results-grid{grid-template-columns:1fr;gap:20px;max-width:520px;margin:0 auto}
   .results-head{margin-bottom:44px}
   .meet{padding:80px 28px 92px}
-  .meet-in{grid-template-columns:1fr;gap:44px}
-  .meet-photo{max-width:480px;margin:0 auto}
+  .meet-in{grid-template-columns:minmax(0,1fr);gap:44px}
+  .meet-photo{width:100%;max-width:480px;margin:0 auto}
   .scentshow{padding:76px 28px 84px}
   .scent-row{grid-template-columns:1fr 1fr;gap:10px}
   .scent-card:nth-child(5){grid-column:span 2;aspect-ratio:5/3}
