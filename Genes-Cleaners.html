@@ -405,6 +405,18 @@ section{padding:clamp(2.6rem,6vw,5.2rem) 0}
 @media(min-width:560px) and (max-width:920px){
   .svc-grid,.loc-grid,.rev-grid{grid-template-columns:1fr 1fr}
 }
+/* nav declutter on phones — drop the redundant button, slim the brand */
+.nav-book{display:none}
+@media(max-width:920px){
+  .navlinks.open .nav-book{display:block;margin-top:.3rem;color:var(--steam-d);font-weight:700}
+}
+@media(max-width:640px){
+  .nav-cta .btn-primary{display:none}
+  .nav .wrap{padding:.45rem 0;gap:.5rem}
+  .brand-icon{height:44px}
+  .brand-txt b{font-size:1.06rem}
+  .brand-txt span{font-size:.52rem;letter-spacing:.18em}
+}
 @media(max-width:560px){
   .hero h1{font-size:2.3rem}
   .opts{grid-template-columns:1fr}
@@ -426,8 +438,23 @@ section{padding:clamp(2.6rem,6vw,5.2rem) 0}
   .price-grid{gap:.6rem}
   .about-photo{aspect-ratio:16/10;background:var(--cream-2)}
   .how,.band{background-attachment:scroll}
-  .quote-main,.quote-side{padding:1.5rem 1.3rem}
-  .quote-total{font-size:2.6rem}
+  /* quote builder — compact so it isn't long & huge */
+  .book .sec-head h2{font-size:1.65rem}
+  .book .sec-head p{font-size:.9rem}
+  .quote-main{padding:1.4rem 1.15rem}
+  .quote-side{padding:1.3rem 1.15rem}
+  .quote-total{font-size:2.3rem}
+  .qh{font-size:1.18rem;margin-bottom:.9rem}
+  .qprog{gap:.3rem;margin-bottom:1.05rem}
+  .qp{font-size:.6rem;padding:.3rem .15rem;gap:.3rem}
+  .qp::before{width:15px;height:15px;font-size:.58rem}
+  .qsvc-grid{grid-template-columns:1fr 1fr;gap:.55rem}
+  .qsvc-opt{padding:.8rem .7rem}
+  .qsvc-opt b{font-size:.9rem}
+  .qsvc-opt small{font-size:.72rem;line-height:1.25}
+  .qloc-opt{padding:.8rem .9rem}
+  .quote-list{max-height:104px}
+  .qitem{padding:.6rem .75rem}
   .cta-band{padding:2rem 1.4rem}
   .foot{padding:2.2rem 0 1.4rem}
   .foot-grid{grid-template-columns:1fr 1fr;gap:1.3rem 1.2rem}
@@ -455,6 +482,7 @@ section{padding:clamp(2.6rem,6vw,5.2rem) 0}
       <a href="#pricing">Pricing</a>
       <a href="#locations">Locations</a>
       <a href="#reviews">Reviews</a>
+      <a href="#book" class="nav-book">Schedule Pickup →</a>
     </div>
     <div class="nav-cta">
       <a class="nav-call" href="tel:+18167811830">📞 (816) 781-1830</a>
