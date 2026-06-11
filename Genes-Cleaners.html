@@ -408,8 +408,32 @@ section{padding:clamp(2.6rem,6vw,5.2rem) 0}
 @media(max-width:560px){
   .hero h1{font-size:2.3rem}
   .opts{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr}
   .promo{flex-direction:column;text-align:center}
+  /* --- mobile tightening: proportionate, less air --- */
+  section{padding:2rem 0}
+  .sec-head{margin-bottom:1.35rem}
+  .sec-head p{font-size:.96rem}
+  .svc{padding:1.15rem}
+  .svc .ic{width:40px;height:40px;margin-bottom:.55rem}
+  .svc .ic svg{width:20px;height:20px}
+  .svc h3{font-size:1.06rem}
+  .svc p{font-size:.88rem;margin-top:.3rem}
+  .svc-grid{gap:.7rem}
+  .step{padding:1.2rem}
+  .step::before{font-size:2rem;margin-bottom:.35rem}
+  .step h3{font-size:1.12rem}
+  .step p{font-size:.9rem}
+  .price-grid{gap:.6rem}
+  .about-photo{aspect-ratio:16/10;background:var(--cream-2)}
+  .how,.band{background-attachment:scroll}
+  .quote-main,.quote-side{padding:1.5rem 1.3rem}
+  .quote-total{font-size:2.6rem}
+  .cta-band{padding:2rem 1.4rem}
+  .foot{padding:2.2rem 0 1.4rem}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:1.3rem 1.2rem}
+  .foot-grid>div:first-child{grid-column:1 / -1}
+  .foot-logo{height:84px}
+  .foot p{font-size:.86rem}
 }
 </style>
 </head>
