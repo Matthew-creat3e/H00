@@ -460,6 +460,37 @@ body.scrollable{overflow-x:hidden;overflow-y:auto}
 #demo-v7-stage .v7-host{display:block;width:100%}
 #demo-v7-stage .v7-live-frame{display:block;width:100%;height:100vh;border:0;background:#0E1218;opacity:0;transition:opacity 1s ease}
 #demo-v7-stage .v7-live-frame.in{opacity:1}
+
+/* ─── Live-demo viewer chrome (sticky action bar + scroll facts + claim) ─── */
+#hoo-live-actions{position:fixed;left:0;right:0;bottom:0;z-index:520;display:flex;gap:10px;align-items:center;justify-content:center;padding:12px 14px;padding-bottom:calc(12px + env(safe-area-inset-bottom));background:linear-gradient(0deg,rgba(8,10,14,.97),rgba(8,10,14,.82) 68%,rgba(8,10,14,0));pointer-events:none}
+#hoo-live-actions > *{pointer-events:auto}
+.hoo-live-claim{flex:1;max-width:420px;padding:16px 20px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0E1218;font-family:var(--font-h);font-size:1.05rem;letter-spacing:2px;cursor:pointer;box-shadow:0 8px 30px rgba(232,153,104,.42);transition:transform .2s;animation:howPulse 2.4s ease-in-out infinite}
+.hoo-live-claim:hover{transform:translateY(-2px)}
+.hoo-live-startover{padding:16px 14px;border-radius:14px;background:rgba(240,234,224,.1);border:1px solid rgba(240,234,224,.25);color:var(--text);font-family:var(--font-h);letter-spacing:1.5px;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:background .2s}
+.hoo-live-startover:hover{background:rgba(240,234,224,.2)}
+.hoo-fact{position:fixed;left:12px;right:12px;bottom:88px;z-index:515;max-width:460px;margin:0 auto;padding:14px 42px 14px 16px;background:linear-gradient(135deg,rgba(18,18,18,.98),rgba(8,8,8,.98));border:1.5px solid var(--gold);border-radius:14px;color:var(--text);font-family:var(--font-b);font-size:.82rem;line-height:1.5;box-shadow:0 14px 44px rgba(0,0,0,.6);opacity:0;transform:translateY(16px) scale(.98);transition:opacity .5s ease,transform .5s var(--ease-out)}
+.hoo-fact.in{opacity:1;transform:translateY(0) scale(1)}
+.hoo-fact-label{font-family:var(--font-h);font-size:.6rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.hoo-fact-x{position:absolute;top:7px;right:10px;width:28px;height:28px;line-height:26px;text-align:center;font-size:1.15rem;color:var(--text-dim);cursor:pointer;user-select:none}
+.hoo-fact-x:hover{color:var(--gold-light)}
+#hoo-claim-panel{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(6,8,12,.93);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .4s ease}
+#hoo-claim-panel.in{opacity:1}
+.hoo-claim-card{max-width:440px;width:100%;background:linear-gradient(160deg,#15212f,#0d1622);border:1px solid rgba(232,153,104,.3);border-radius:20px;padding:34px 26px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(20px) scale(.97);transition:transform .45s var(--ease-out)}
+#hoo-claim-panel.in .hoo-claim-card{transform:none}
+.hoo-claim-card .hoo-claim-owl{font-size:2.4rem;line-height:1;margin-bottom:10px}
+.hoo-claim-card h3{font-family:var(--font-h);font-size:1.7rem;letter-spacing:1px;color:var(--text);margin-bottom:14px}
+.hoo-claim-card p{font-family:var(--font-b);font-size:.95rem;line-height:1.6;color:var(--text-mid);margin-bottom:10px}
+.hoo-claim-card .accent{color:var(--gold-light);font-weight:600}
+.hoo-claim-done{margin-top:20px;width:100%;padding:15px 30px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0E1218;font-family:var(--font-h);letter-spacing:2px;font-size:1.05rem;cursor:pointer}
+.hoo-claim-close{display:block;margin:14px auto 0;background:none;border:none;color:var(--text-dim);font-family:var(--font-b);font-size:.82rem;cursor:pointer;text-decoration:underline}
+@media(max-width:768px){
+  .hoo-live-claim{font-size:.88rem;padding:15px 12px;letter-spacing:1px}
+  .hoo-live-startover{font-size:.7rem;padding:15px 11px;letter-spacing:1px}
+  .hoo-fact{bottom:94px;font-size:.8rem}
+  .hoo-claim-card{padding:28px 20px}
+  .hoo-claim-card h3{font-size:1.45rem}
+  .hoo-claim-card p{font-size:.88rem}
+}
 #demo-v7-stage .v7-loader{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:var(--font-h);font-size:.9rem;letter-spacing:3px;text-transform:uppercase;opacity:.7;pointer-events:none}
 #demo-v7-stage .v7-loader::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-left:10px;animation:v7Pulse 1.2s ease-in-out infinite}
 @keyframes v7Pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
@@ -1323,7 +1354,9 @@ function setDemoColors(tpl){
 /* Reverse the materialize — tear down the v7 shadow DOM, bring the HOO
    landing back, reset progress bar + build log + overlay bar. Wired to the
    BACK button in the overlay that appears during v7 mode. */
+var _hooLiveCleanup = null;
 function exitToHoo(){
+  if(typeof _hooLiveCleanup === 'function'){ try{ _hooLiveCleanup(); }catch(e){} _hooLiveCleanup = null; }
   const vp      = document.getElementById('demo-viewport');
   const stage   = document.getElementById('demo-v7-stage');
   const landing = document.getElementById('landing');
@@ -1452,6 +1485,144 @@ async function runLiveDemo(biz, demo){
   await delay(700);
   const prog = document.querySelector('.build-progress-bar');
   if(prog){ prog.style.transition = 'opacity .6s ease'; prog.style.opacity = '0'; }
+
+  // Sticky action bar (Start over / I want this) + scroll-triggered facts.
+  setupLiveViewer(frame, biz, demo);
+}
+
+/* Build the persistent viewer chrome over a live-demo iframe: a sticky bottom
+   bar (Start over | I want this for my site) and "why this works" fact cards
+   that pop as the visitor scrolls the demo. Same-origin (both on the H00 Pages
+   site) lets us read the iframe scroll; if blocked (e.g. local file:// testing)
+   we fall back to a gentle timer so facts still cycle. */
+function setupLiveViewer(frame, biz, demo){
+  var stage = document.getElementById('demo-v7-stage');
+  if(!stage) return;
+  var what = (demo && demo.label && !demo.showcase) ? (demo.label.toLowerCase() + ' site') : 'new site';
+
+  // ── sticky bottom action bar ──
+  var bar = document.createElement('div');
+  bar.id = 'hoo-live-actions';
+  var startover = document.createElement('button');
+  startover.className = 'hoo-live-startover';
+  startover.textContent = '← START OVER';
+  startover.addEventListener('click', exitToHoo);
+  var claim = document.createElement('button');
+  claim.className = 'hoo-live-claim';
+  claim.textContent = 'I WANT THIS FOR MY SITE';
+  claim.addEventListener('click', function(){ showClaim(biz, demo, what); });
+  bar.appendChild(startover);
+  bar.appendChild(claim);
+  stage.appendChild(bar);
+
+  // ── facts that pop as you scroll ──
+  var FACTS = [
+    {label:'This is real', body:'Not a picture — a live site. Every button, quote tool, and link actually works. Scroll it like your customer would.'},
+    {label:'Built to book jobs', body:'See how easy it is to get a quote or tap to call? That turns people just looking into booked work.'},
+    {label:'Perfect on phones', body:'Most folks find you on their phone. Your site looks just this sharp on mobile.'},
+    {label:'Free to start', body:'We build it free with YOUR name on it. You only pay when you love it. Tap “I want this” below.'}
+  ];
+  var shown = -1, factEl = null, factTimer = null;
+  function showFact(i){
+    if(i <= shown || i >= FACTS.length) return;
+    shown = i;
+    if(factEl && factEl.parentNode) factEl.parentNode.removeChild(factEl);
+    var f = FACTS[i];
+    var el = document.createElement('div');
+    el.className = 'hoo-fact';
+    var x = document.createElement('span'); x.className = 'hoo-fact-x'; x.textContent = '×';
+    var lab = document.createElement('div'); lab.className = 'hoo-fact-label'; lab.textContent = f.label;
+    var body = document.createElement('div'); body.textContent = f.body;
+    el.appendChild(x); el.appendChild(lab); el.appendChild(body);
+    stage.appendChild(el);
+    factEl = el;
+    requestAnimationFrame(function(){ el.classList.add('in'); });
+    function close(){ el.classList.remove('in'); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 500); if(factEl === el) factEl = null; }
+    x.addEventListener('click', close);
+    setTimeout(close, 7000);
+  }
+
+  // try same-origin scroll; fall back to timer if blocked
+  var canScroll = false, win = null;
+  try{ win = frame.contentWindow; var probe = win.scrollY; canScroll = (typeof probe === 'number'); }catch(e){ canScroll = false; }
+  function onScroll(){
+    var docEl;
+    try{ docEl = frame.contentDocument.documentElement; }catch(e){ return; }
+    var max = docEl.scrollHeight - win.innerHeight;
+    var pct = max > 0 ? (win.scrollY / max) : 0;
+    showFact(Math.min(FACTS.length - 1, Math.floor(pct * FACTS.length)));
+  }
+  if(canScroll && win){
+    win.addEventListener('scroll', onScroll, {passive:true});
+  } else {
+    var k = 0;
+    factTimer = setInterval(function(){ k++; if(k >= FACTS.length){ clearInterval(factTimer); factTimer = null; return; } showFact(k); }, 8500);
+  }
+  // first fact after a beat so they see the demo first
+  setTimeout(function(){ showFact(0); }, 1600);
+
+  // teardown — called by exitToHoo (clears timer + listener; DOM is cleared there)
+  _hooLiveCleanup = function(){
+    if(factTimer){ clearInterval(factTimer); factTimer = null; }
+    if(canScroll && win){ try{ win.removeEventListener('scroll', onScroll); }catch(e){} }
+  };
+}
+
+/* Claim confirmation — fires from "I want this for my site". Uses the name +
+   phone the visitor already entered. Best-effort lead capture to localStorage. */
+function showClaim(biz, demo, what){
+  if(document.getElementById('hoo-claim-panel')) return;
+  var name  = (biz && biz.name)  ? biz.name  : 'your business';
+  var phone = (biz && biz.phone) ? biz.phone : '';
+  var stage = document.getElementById('demo-v7-stage');
+
+  var panel = document.createElement('div'); panel.id = 'hoo-claim-panel';
+  var card  = document.createElement('div'); card.className = 'hoo-claim-card';
+
+  var owl = document.createElement('div'); owl.className = 'hoo-claim-owl'; owl.textContent = '🦉';
+  var h = document.createElement('h3'); h.textContent = "Let's build it.";
+
+  var p1 = document.createElement('p');
+  p1.appendChild(document.createTextNode("We'll build "));
+  var s1 = document.createElement('span'); s1.className = 'accent'; s1.textContent = name + "'s " + what;
+  p1.appendChild(s1);
+  p1.appendChild(document.createTextNode(" exactly like this one — free, with your name and your photos."));
+
+  var p2 = document.createElement('p');
+  if(phone){
+    p2.appendChild(document.createTextNode('Matthew texts '));
+    var s2 = document.createElement('span'); s2.className = 'accent'; s2.textContent = phone;
+    p2.appendChild(s2);
+    p2.appendChild(document.createTextNode(' within 24 hours to walk you through it.'));
+  } else {
+    p2.textContent = 'Matthew reaches out within 24 hours to walk you through it.';
+  }
+
+  var p3 = document.createElement('p');
+  p3.appendChild(document.createTextNode('You only pay when you '));
+  var s3 = document.createElement('span'); s3.className = 'accent'; s3.textContent = 'approve it.';
+  p3.appendChild(s3);
+
+  var done = document.createElement('button'); done.className = 'hoo-claim-done'; done.textContent = 'SOUNDS GOOD';
+  var close = document.createElement('button'); close.className = 'hoo-claim-close'; close.textContent = 'keep looking';
+  function closePanel(){ panel.classList.remove('in'); setTimeout(function(){ if(panel.parentNode) panel.parentNode.removeChild(panel); }, 400); }
+  done.addEventListener('click', closePanel);
+  close.addEventListener('click', closePanel);
+
+  card.appendChild(owl); card.appendChild(h);
+  card.appendChild(p1); card.appendChild(p2); card.appendChild(p3);
+  card.appendChild(done); card.appendChild(close);
+  panel.appendChild(card);
+  (stage || document.body).appendChild(panel);
+  requestAnimationFrame(function(){ panel.classList.add('in'); });
+
+  // best-effort lead capture
+  try{
+    var leads = JSON.parse(localStorage.getItem('hooLeads') || '[]');
+    leads.push({name:name, phone:phone, pitch:(biz && biz.pitch) || '', demo:(demo && demo.file) || '', t:+new Date()});
+    localStorage.setItem('hooLeads', JSON.stringify(leads));
+  }catch(e){}
+  try{ console.log('[hoo-lead] CLAIM', name, phone, (demo && demo.file)); }catch(e){}
 }
 
 /* ═══════════════════════════════════════
